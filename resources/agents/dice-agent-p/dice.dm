@@ -1,0 +1,438 @@
+213
+SOAR_ID 0
+SOAR_ID 1
+SOAR_ID 2
+SOAR_ID 3
+SOAR_ID 4
+ENUMERATION 5 1 state
+ENUMERATION 6 1 nil
+ENUMERATION 7 1 dice
+ENUMERATION 8 1 initialize-dice
+SOAR_ID 9
+SOAR_ID 10
+SOAR_ID 11
+SOAR_ID 12
+ENUMERATION 13 2 false true
+SOAR_ID 14
+INT_RANGE 15 -2147483648 2147483647
+ENUMERATION 17 2 false true
+STRING 16
+SOAR_ID 19
+SOAR_ID 18
+INT_RANGE 21 -2147483648 2147483647
+INT_RANGE 20 -2147483648 2147483647
+INT_RANGE 23 -2147483648 2147483647
+SOAR_ID 22
+INT_RANGE 25 -2147483648 2147483647
+SOAR_ID 24
+ENUMERATION 27 1 nil
+ENUMERATION 26 1 nil
+SOAR_ID 29
+ENUMERATION 28 6 accept bid challenge exact pass push
+ENUMERATION 31 2 false true
+ENUMERATION 30 6 accept bid challenge exact pass push
+INT_RANGE 34 -2147483648 2147483647
+ENUMERATION 35 2 failure success
+ENUMERATION 32 1 nil
+INT_RANGE 33 -2147483648 2147483647
+SOAR_ID 38
+ENUMERATION 39 2 complete error
+SOAR_ID 36
+ENUMERATION 37 2 complete error
+SOAR_ID 42
+ENUMERATION 43 2 complete error
+INT_RANGE 40 -2147483648 2147483647
+INT_RANGE 41 -2147483648 2147483647
+ENUMERATION 46 2 complete error
+SOAR_ID 47
+INT_RANGE 44 -2147483648 2147483647
+SOAR_ID 45
+SOAR_ID 51
+ENUMERATION 50 2 complete error
+SOAR_ID 49
+ENUMERATION 48 2 complete error
+ENUMERATION 55 2 false true
+INT_RANGE 54 -2147483648 2147483647
+SOAR_ID 53
+ENUMERATION 52 2 complete error
+ENUMERATION 59 1 sleep
+SOAR_ID 58
+ENUMERATION 57 1 clean
+SOAR_ID 56
+ENUMERATION 63 1 accept
+SOAR_ID 62
+ENUMERATION 61 1 exact
+SOAR_ID 60
+SOAR_ID 68
+ENUMERATION 69 1 bid
+SOAR_ID 70
+ENUMERATION 71 1 push
+SOAR_ID 64
+ENUMERATION 65 1 pass
+SOAR_ID 66
+ENUMERATION 67 4 bid challenge exact pass
+INT_RANGE 76 -2147483648 2147483647
+INT_RANGE 77 -2147483648 2147483647
+INT_RANGE 78 -2147483648 2147483647
+INT_RANGE 79 -2147483648 2147483647
+SOAR_ID 72
+SOAR_ID 73
+INT_RANGE 74 -2147483648 2147483647
+INT_RANGE 75 -2147483648 2147483647
+SOAR_ID 85
+ENUMERATION 84 2 false true
+SOAR_ID 87
+ENUMERATION 86 2 false true
+SOAR_ID 81
+INT_RANGE 80 -2147483648 2147483647
+ENUMERATION 83 2 false true
+ENUMERATION 82 1 initialize-player-list
+STRING 89
+INT_RANGE 88 -2147483648 2147483647
+ENUMERATION 90 1 nil
+ENUMERATION 100 2 false true
+SOAR_ID 98
+ENUMERATION 99 1 count-dice-faces
+INT_RANGE 111 1 6
+ENUMERATION 117 2 special unknown
+ENUMERATION 116 1 true
+ENUMERATION 114 1 clear-turn-data
+SOAR_ID 113
+INT_RANGE 112 -2147483648 2147483647
+INT_RANGE 130 -2147483648 2147483647
+ENUMERATION 152 2 false true
+SOAR_ID 153
+SOAR_ID 148
+INT_RANGE 149 -2147483648 2147483647
+INT_RANGE 150 -2147483648 2147483647
+ENUMERATION 151 1 unknown
+INT_RANGE 169 -2147483648 2147483647
+INT_RANGE 168 0 6
+SOAR_ID 175
+INT_RANGE 174 -2147483648 2147483647
+INT_RANGE 173 -2147483648 2147483647
+SOAR_ID 172
+SOAR_ID 163
+SOAR_ID 162
+SOAR_ID 161
+ENUMERATION 166 1 top-state
+ENUMERATION 165 1 yes
+ENUMERATION 164 1 dice
+INT_RANGE 184 -2147483648 2147483647
+ENUMERATION 190 1 push
+INT_RANGE 191 -2147483648 2147483647
+SOAR_ID 188
+SOAR_ID 189
+ENUMERATION 178 1 compute-very-safe-bid
+ENUMERATION 176 1 compute-last-bid
+SOAR_ID 177
+INT_RANGE 183 -2147483648 2147483647
+INT_RANGE 181 -2147483648 2147483647
+INT_RANGE 205 -2147483648 2147483647
+INT_RANGE 204 3 6
+SOAR_ID 207
+ENUMERATION 206 7 eq ge gt le lt ne neq
+ENUMERATION 201 1 compute-probability
+ENUMERATION 200 1 dice
+INT_RANGE 203 1 2147483647
+SOAR_ID 202
+INT_RANGE 197 1 6
+SOAR_ID 196
+SOAR_ID 199
+ENUMERATION 198 3 false true 0
+SOAR_ID 193
+INT_RANGE 195 -2147483648 2147483647
+SOAR_ID 194
+SOAR_ID 220
+ENUMERATION 221 1 higher
+ENUMERATION 222 1 all
+INT_RANGE 223 -2147483648 2147483647
+ENUMERATION 208 1 nil
+SOAR_ID 209
+FLOAT_RANGE 210 -Infinity Infinity
+SOAR_ID 239
+SOAR_ID 238
+INT_RANGE 237 -2147483648 2147483647
+INT_RANGE 236 -2147483648 2147483647
+FLOAT_RANGE 233 -Infinity Infinity
+ENUMERATION 231 1 bid-special
+SOAR_ID 230
+INT_RANGE 229 -2147483648 2147483647
+INT_RANGE 228 -2147483648 2147483647
+INT_RANGE 227 -2147483648 2147483647
+INT_RANGE 226 -2147483648 2147483647
+INT_RANGE 225 -2147483648 2147483647
+INT_RANGE 224 -2147483648 2147483647
+ENUMERATION 255 2 false true
+ENUMERATION 244 2 false true
+SOAR_ID 240
+INT_RANGE 278 -2147483648 2147483647
+ENUMERATION 277 1 true
+ENUMERATION 307 2 false true
+ENUMERATION 309 1 true
+ENUMERATION 308 4 lost play visitor won
+ENUMERATION 311 1 add-reward
+SOAR_ID 310
+ENUMERATION 313 1 remove-reward
+SOAR_ID 312
+SOAR_ID 315
+SOAR_ID 314
+SOAR_ID 317
+INT_RANGE 316 -1 1
+SOAR_ID 319
+ENUMERATION 318 1 challenge
+INT_RANGE 292 -2147483648 2147483647
+ENUMERATION 343 2 true false
+INT_RANGE 342 0 0
+ENUMERATION 341 2 true false
+ENUMERATION 340 2 true false
+ENUMERATION 339 0
+INT_RANGE 338 0 0
+SOAR_ID 337
+INT_RANGE 336 0 0
+ENUMERATION 349 1 nil
+ENUMERATION 348 1 compute-next-player
+SOAR_ID 347
+ENUMERATION 346 2 true false
+ENUMERATION 345 0
+ENUMERATION 344 2 true false
+SOAR_ID 326
+ENUMERATION 327 1 halt
+ENUMERATION 324 1 true
+INT_RANGE 325 0 2147483647
+ENUMERATION 322 1 true
+INT_RANGE 323 -2147483648 2147483647
+ENUMERATION 320 2 failure success
+INT_RANGE 321 -1 1
+INT_RANGE 334 0 0
+INT_RANGE 335 0 0
+INT_RANGE 332 0 5
+SOAR_ID 333
+INT_RANGE 330 0 0
+ENUMERATION 331 2 true false
+ENUMERATION 328 1 div
+LINKED_DATAMAP 329 dice.dm
+223
+0 operator 62
+12 multiplier 34
+188 die 196
+333 player 14
+14 pushed 19
+202 predicate 206
+19 die 24
+62 name 63
+177 name 178
+87 pushed 19
+66 face 168
+85 player 87
+87 next-player 87
+3 bid 38
+18 1 236
+3 qna-query 199
+0 my-turn 55
+68 face 76
+1 input-link 2
+0 current-id 325
+0 operator 60
+162 dice-count 148
+51 status 52
+87 next-player 90
+0 alternative-dice-counts 238
+238 last-player-unknown-dice 332
+87 dice-counts 162
+161 2 226
+230 remainder-after-push 330
+317 target 319
+2 history 26
+45 status 46
+153 face 111
+56 name 57
+11 mystatus 308
+0 true-dice-counts 238
+0 top-state 329
+29 name 30
+3 sleep 36
+81 name 82
+3 challenge 42
+22 face 23
+0 name 7
+0 desired 220
+230 name 231
+12 target 14
+12 action 28
+14 exists 17
+0 operator 58
+12 next 32
+9 special 13
+0 operator 81
+9 last-bid 27
+0 operator 68
+18 die 22
+163 name 164
+66 push-face-count 183
+9 recorded 324
+72 next-bid 73
+0 push-bid 188
+0 operator 347
+0 operator 70
+24 face 25
+72 next-one-bid-special 73
+202 count 205
+68 multiplier 77
+113 name 114
+12 face 33
+72 next-one-bid-normal 73
+238 dice-counted 116
+42 status 43
+36 status 37
+53 face 54
+14 cup 18
+9 last-bid 12
+0 operator 4
+0 operator 310
+153 hold-face 292
+66 multiplier 169
+202 number-of-faces 204
+0 operator 175
+0 initialize-dice-count 100
+66 push-face 184
+19 count 21
+18 count 20
+3 pass 47
+47 status 48
+2 affordances 10
+0 type 5
+4 name 8
+0 probabilities 342
+66 name 67
+193 die 194
+317 result 320
+199 result 207
+148 unknwon 223
+0 operator 312
+81 player 14
+0 operator 177
+161 5 229
+87 name 89
+0 very-safe-bid-computed 172
+0 next-player-data 12
+29 available 31
+196 face 197
+3 exact 49
+14 id 15
+0 operator 64
+3 accept 45
+38 multiplier 40
+11 player 14
+314 reward 315
+87 cup 18
+0 operator 113
+38 status 39
+238 total-dice-count 130
+0 last-bid 172
+12 player 14
+12 result 35
+0 problem-space 163
+199 source 200
+10 action 29
+317 id 323
+0 dice-data-initialized 84
+0 model-enabled 244
+238 dice-count 153
+161 3 227
+153 not-face 278
+38 face 41
+29 target 14
+199 parameters 202
+0 clear-data 309
+70 name 71
+0 reward-link 314
+2 players 11
+189 name 190
+0 players-initialized 83
+0 operator 98
+11 current 14
+49 status 50
+73 increment-multiplier 80
+12 player 349
+163 default-state-copy 165
+0 last-bid-1-lower-multiplier 79
+68 push-face-count 181
+14 total-dice 191
+1 output-link 3
+87 id 88
+11 me 14
+0 operator 189
+0 split 346
+18 2 237
+42 target 44
+0 operator 326
+161 unknown 224
+98 name 99
+85 first-player 87
+172 face 173
+194 face 195
+0 operator 66
+87 me 255
+0 player-list 85
+162 unknown 223
+347 name 348
+239 top-state 240
+2 history 12
+14 me 152
+220 better 221
+202 number-of-dice 203
+0 normalized-reward 343
+87 alternative-dice-counts 162
+310 value 321
+73 new-face 75
+207 next 208
+14 name 16
+0 io 1
+326 name 327
+2 state 9
+66 probability 233
+12 next 12
+207 features 209
+199 query 201
+310 name 311
+199 results 222
+85 complete 86
+148 count 150
+148 face 151
+0 superstate 6
+9 inprogress 307
+0 heuristics 344
+14 dice-counts 161
+153 count 112
+60 name 61
+64 name 65
+68 push-face 78
+51 die 53
+161 4 228
+70 push-structure 193
+161 1 225
+209 probability 210
+0 dice-data 72
+85 current-player 87
+312 name 313
+0 superstate 239
+317 action 318
+315 value 316
+163 dont-copy 166
+58 name 59
+148 face 149
+68 name 69
+14 alternative-dice-counts 161
+0 operator 56
+73 current-face 74
+2 rounds 317
+175 name 176
+153 face 117
+66 target 14
+0 dice-counts 238
+0 operator 230
+3 push 51
+238 updated 277
+172 count 174
+317 recorded 322

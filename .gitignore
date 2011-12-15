@@ -1,0 +1,6 @@
+bin
+experiments
+.classpath
+.settings
+.project
+SoarMatch.launch
