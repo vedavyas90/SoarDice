@@ -1,9 +1,11 @@
 package edu.umich.dice3;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -28,6 +30,7 @@ import sml.Agent;
 import sml.Agent.OutputNotificationInterface;
 import sml.Agent.PrintEventInterface;
 import sml.Agent.ProductionEventInterface;
+import sml.ClientAnalyzedXML;
 import sml.Identifier;
 import sml.IntElement;
 import sml.Kernel;
@@ -36,6 +39,7 @@ import sml.WMElement;
 import sml.smlPrintEventId;
 import sml.smlProductionEventId;
 import sml.smlRunState;
+import sml.sml_Names;
 import edu.umich.dice3.args.ArgsParser;
 import edu.umich.dice3.gamestate.Bid;
 import edu.umich.dice3.gamestate.DiceGameState;
@@ -53,6 +57,9 @@ public class SoarMatch
 
     // For RL runs, how many bins should be made.
     public static final int RL_BINS = 100;
+
+    public static boolean debuggingEnabled = true;
+    private static File debugFile;
 
     private static boolean handleBid(DiceGameState game, int playerId, int multiplier, int face) throws IOException, InterruptedException
     {
@@ -260,8 +267,9 @@ public class SoarMatch
         int numTestingGames = -1;
 
         SoarMatchConfig matchConfig = new SoarMatchConfig();
-        
-        if (parsedArgs.containsKey("optimized-kernel") && parsedArgs.get("optimized-kernel").equals("on")) {
+
+        if (parsedArgs.containsKey("optimized-kernel") && parsedArgs.get("optimized-kernel").equals("on"))
+        {
             System.out.println("Using optimized kernel");
             matchConfig.optimizedKernel = true;
         }
@@ -375,6 +383,38 @@ public class SoarMatch
             }
         }
 
+        /* Apoptosis stuff */
+
+        // boolean apoptosis = parsedArgs.containsKey("apoptosis") &&
+        // parsedArgs.get("apoptosis").equals("on");
+        Double apoptosis = null;
+        if (parsedArgs.containsKey("apoptosis"))
+        {
+            apoptosis = Double.parseDouble(parsedArgs.get("apoptosis"));
+
+            if (parsedArgs.containsKey("apoptosis-small") && parsedArgs.get("apoptosis-small").equals("on"))
+            {
+                apoptosis *= -1;
+            }
+        }
+
+        Integer rngSeed = null;
+        if (parsedArgs.containsKey("rng-seed"))
+        {
+            rngSeed = Integer.parseInt(parsedArgs.get("rng-seed"));
+        }
+        Random random;
+        if (rngSeed == null) random = new Random();
+        else random = new Random(rngSeed);
+
+        boolean optimizedKernel = parsedArgs.containsKey("kernel") && parsedArgs.get("kernel").equals("optimized");
+        boolean silence = parsedArgs.containsKey("silence") && parsedArgs.get("silence").equals("on");
+        setDebuggingEnabled(!silence);
+
+        boolean maxTime = parsedArgs.containsKey("maxtime") && parsedArgs.get("maxtime").equals("on");
+
+        /* End apoptosis stuff */
+
         try
         {
             if (runType == RunType.Single_Game)
@@ -391,7 +431,7 @@ public class SoarMatch
                 matchConfig.spawnDebugger = true;
                 matchConfig.firstGames = true;
                 matchConfig.learningOn = true;
-                runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig);
+                runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null);
             }
             else if (runType == RunType.RL)
             {
@@ -419,10 +459,15 @@ public class SoarMatch
                     // Run once with learning off.
                     File logFile = new File(logDir, "bin_" + bin + "_learning_off.txt");
                     setDebugFile(new File(logDir, "debug_" + bin + "_learning_off.txt"));
+                    File times = null;
+                    if (maxTime)
+                    {
+                        times = new File(logDir, "time_" + bin + "_learning_off.txt");
+                    }
                     matchConfig.spawnDebugger = true;
                     matchConfig.firstGames = bin == 0;
                     matchConfig.learningOn = false;
-                    DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig);
+                    DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig, apoptosis, random, silence, false, times);
                     int[] wins = frame.getWins();
                     RulesData[] rulesData = frame.getRulesData();
                     FileWriter fw = new FileWriter(allLog, true);
@@ -491,10 +536,15 @@ public class SoarMatch
                     // Run once with learning on.
                     logFile = new File(logDir, "bin_" + bin + "_learning_on.txt");
                     setDebugFile(new File(logDir, "debug_" + bin + "_learning_on.txt"));
+                    times = null;
+                    if (maxTime)
+                    {
+                        times = new File(logDir, "time_" + bin + "_learning_on.txt");
+                    }
                     matchConfig.spawnDebugger = true;
                     matchConfig.firstGames = bin == 0;
                     matchConfig.learningOn = true;
-                    frame = runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig);
+                    frame = runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, bin == 1, times);
                     wins = frame.getWins();
                     rulesData = frame.getRulesData();
                     fw = new FileWriter(allLog, true);
@@ -532,10 +582,15 @@ public class SoarMatch
                 // Finally, run one more time with learning off.
                 File logFile = new File(logDir, "bin_" + RL_BINS + "_learning_off.txt");
                 setDebugFile(new File(logDir, "debug_" + RL_BINS + "_learning_off.txt"));
+                File times = null;
+                if (maxTime)
+                {
+                    times = new File(logDir, "time_" + RL_BINS + "_learning_on.txt");
+                }
                 matchConfig.spawnDebugger = true;
                 matchConfig.firstGames = false;
                 matchConfig.learningOn = false;
-                DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig);
+                DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig, apoptosis, random, silence, false, times);
                 int[] wins = frame.getWins();
                 FileWriter fw = new FileWriter(allLog, true);
                 fw.write("Bin " + RL_BINS + ", learning off:\n");
@@ -575,7 +630,7 @@ public class SoarMatch
                     matchConfig.spawnDebugger = false;
                     matchConfig.learningOn = true;
                     matchConfig.firstGames = true;
-                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig);
+                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null);
                     int[] wins = frame.getWins();
                     FileWriter fw = new FileWriter(allLog, true);
                     fw.write(pair.get(0) + '\t' + wins[0] + '\t' + pair.get(1) + '\t' + wins[1] + '\n');
@@ -603,7 +658,7 @@ public class SoarMatch
                     matchConfig.spawnDebugger = true;
                     matchConfig.learningOn = true;
                     matchConfig.firstGames = true;
-                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig);
+                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null);
                     int[] wins = frame.getWins();
                     FileWriter fw = new FileWriter(allLog, true);
                     fw.write(pair.get(0) + '\t' + wins[0] + '\t' + pair.get(1) + '\t' + wins[1] + '\n');
@@ -702,8 +757,8 @@ public class SoarMatch
      * @return
      * @throws Exception
      */
-    private static DiceFrame runGames(Wini wini, List<String> agentNames, File logFile, String beginTime, int numGames, SoarMatchConfig matchConfig)
-            throws Exception
+    private static DiceFrame runGames(Wini wini, List<String> agentNames, File logFile, String beginTime, int numGames, SoarMatchConfig matchConfig,
+            Double apoptosis, Random random, boolean silence, boolean watchBT, File maxTime) throws Exception
     {
 
         // Unpack config variables.
@@ -911,7 +966,10 @@ public class SoarMatch
                     throw new IllegalStateException(kernel.GetLastErrorDescription());
                 }
 
-                executeCommand(agents[i], "timers -d");
+                if (maxTime == null)
+                {
+                    executeCommand(agents[i], "timers -d");
+                }
                 agents[i].SetOutputLinkChangeTracking(true);
                 if (i == 0)
                 {
@@ -939,8 +997,11 @@ public class SoarMatch
             Agent agent = agents[i];
             if (config[i] != null)
             {
-                sourceAgent(agents[i], config, i, firstGames, learningOn);
-
+                sourceAgent(agents[i], config, i, firstGames, learningOn, apoptosis, silence);
+                if (watchBT)
+                {
+                    // agents[i].ExecuteCommandLine("watch 5");
+                }
                 // For tracking rl values
                 // executeCommand(agents[i], "watch --rl");
 
@@ -977,6 +1038,9 @@ public class SoarMatch
 
         Object lock = new Object();
 
+        int numTurns[] = new int[numAgents];
+        int dcCounter[] = new int[numAgents];
+
         for (int gameIndex = 0; gameIndex < numGames; ++gameIndex)
         {
             String gameName = "game-" + gameIndex;
@@ -992,7 +1056,6 @@ public class SoarMatch
             boolean gameInProgress = true;
             boolean oneMore = false;
 
-            Random random = new Random();
             for (int i = 0; i < agents.length; ++i)
             {
                 Agent agent = agents[i];
@@ -1006,6 +1069,13 @@ public class SoarMatch
                 if (agent != null)
                 {
                     executeCommand(agent, "srand " + seed);
+                    numTurns[i] = 0;
+                    {
+                        ClientAnalyzedXML response = new ClientAnalyzedXML();
+                        agent.ExecuteCommandLineXML("stats", response);
+
+                        dcCounter[i] = response.GetArgInt(sml_Names.getKParamStatsCycleCountDecision(), 0);
+                    }
                 }
             }
 
@@ -1125,6 +1195,10 @@ public class SoarMatch
                                 boolean[] refreshAr = { needsRefresh };
                                 agentSlept = handleAgentCommands(agent, game, playerId, refreshAr);
                                 needsRefresh = refreshAr[0];
+                                if (!agentSlept)
+                                {
+                                    numTurns[playerId]++;
+                                }
                             }
                         }
                         else if (frame != null)
@@ -1189,6 +1263,13 @@ public class SoarMatch
                     {
                         gameInProgress = false;
                     }
+                    /*
+                    else if (agentHalted)
+                    {
+                        System.out.println("Player " + playerId + " halted but the game is still in progress.");
+                        System.exit(1);
+                    }
+                    */
                 }
             }
 
@@ -1209,6 +1290,40 @@ public class SoarMatch
                 DiceFrame.writeHistoryToStream(frame.getHistory(), os);
                 String message = "End of " + gameName + ", winner: Player #" + winner.getId() + "\n\n\n";
                 os.write(message.getBytes());
+                os.close();
+            }
+
+            if (maxTime != null)
+            {
+                FileOutputStream os = new FileOutputStream(maxTime, true);
+
+                // get pid
+                Process proc = Runtime.getRuntime().exec("resources/pid.sh");
+                proc.waitFor();
+                int pid = Integer.parseInt(new BufferedReader(new InputStreamReader(proc.getInputStream())).readLine());
+
+                proc = Runtime.getRuntime().exec("resources/report.php" + " " + pid);
+                proc.waitFor();
+                String result = new BufferedReader(new InputStreamReader(proc.getInputStream())).readLine();
+
+                os.write(("RSS=" + result + "\n").getBytes());
+
+                for (int i = 0; i < numAgents; ++i)
+                {
+                    Agent agent = agents[i];
+
+                    if (agent != null)
+                    {
+                        String message = (agent.GetAgentName() + ", " + gameName + "\n" + agent.ExecuteCommandLine("stats --max"));
+                        os.write(message.getBytes());
+                        ClientAnalyzedXML response = new ClientAnalyzedXML();
+                        agent.ExecuteCommandLineXML("stats", response);
+
+                        message = ("\n" + numTurns[i] + " " + (response.GetArgInt(sml_Names.getKParamStatsCycleCountDecision(), 0) - dcCounter[i]) + "\n");
+                        os.write(message.getBytes());
+                    }
+                }
+
                 os.close();
             }
 
@@ -1303,7 +1418,8 @@ public class SoarMatch
         return frame;
     }
 
-    private static void sourceAgent(Agent agent, FreeDiceAgentConfiguration[] config, int i, boolean firstGames, boolean learningOn) throws IOException
+    private static void sourceAgent(Agent agent, FreeDiceAgentConfiguration[] config, int i, boolean firstGames, boolean learningOn, Double apoptosis,
+            boolean silence) throws IOException
     {
         boolean loadedRete = false;
         executeCommand(agent, "rl --set learning on");
@@ -1349,6 +1465,8 @@ public class SoarMatch
             }
         }
 
+        if (silence) executeCommand(agent, "watch 0");
+
         if (hasRL(config, i))
         {
             executeCommand(agent, "learn --only");
@@ -1375,6 +1493,17 @@ public class SoarMatch
                 debug("Enabling learning");
                 executeCommand(agent, "rl --set learning on");
                 executeCommand(agent, "rl --set chunk-stop on");
+                executeCommand(agent, "rl --set hrl-discount off");
+                if (apoptosis != null)
+                {
+                    executeCommand(agent, "rl --set apoptosis-decay " + Math.abs(apoptosis));
+                    executeCommand(agent, "rl --set apoptosis-thresh 2");
+                    executeCommand(agent, "rl --set apoptosis chunks");
+                    if (apoptosis < 0)
+                    {
+                        executeCommand(agent, "rl --set apoptosis-rl off");
+                    }
+                }
             }
         }
 
@@ -1394,19 +1523,10 @@ public class SoarMatch
      */
     private static void doFirstLoad(Agent agent)
     {
-        String[] commands = {
-                "multi-attributes dice-counts 5",
-                "multi-attributes player 5",
-                "multi-attributes operator 9",
-                "multi-attributes die 4",
-                "multi-attributes next-bid 25",
-                "multi-attributes action 10",
-                "multi-attributes evaluation 10",
-                "gp-max 10000000",
-                "max-chunks 1000",
+        String[] commands = { "multi-attributes dice-counts 5", "multi-attributes player 5", "multi-attributes operator 9", "multi-attributes die 4",
+                "multi-attributes next-bid 25", "multi-attributes action 10", "multi-attributes evaluation 10", "gp-max 10000000", "max-chunks 1000",
                 // Boltzman with low temperature
-                "indifferent-selection -b",
-                "indifferent-selection -t .08", };
+                "indifferent-selection -b", "indifferent-selection -t .08", };
         for (String command : commands)
         {
             executeCommand(agent, command);
@@ -1560,7 +1680,7 @@ public class SoarMatch
         String output = agent.ExecuteCommandLine(command);
 
         if (debug) debug("Output: " + output);
-
+        
         if (agent.HadError())
         {
             debug("Error with command: " + agent.GetLastErrorDescription());
@@ -1762,12 +1882,9 @@ public class SoarMatch
 
     public static void debug(String message)
     {
-        // Turn of debugging for now
-        // return;
+        if (!debuggingEnabled) return;
         log(message, debugFile);
     }
-
-    private static File debugFile;
 
     public static void setDebugFile(File file)
     {
@@ -1783,6 +1900,11 @@ public class SoarMatch
             }
         }
         debugFile = file;
+    }
+
+    public static void setDebuggingEnabled(boolean enabled)
+    {
+        debuggingEnabled = enabled;
     }
 
 }
