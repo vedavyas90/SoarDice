@@ -12,5 +12,6 @@ public class SoarMatchConfig
     public boolean collectMetadata;
     
     // Newer options
-    boolean optimizedKernel = false;
+    public boolean optimizedKernel = false;
+    public double temperature = -1.0;
 }

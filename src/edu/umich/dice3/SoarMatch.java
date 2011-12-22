@@ -56,7 +56,7 @@ public class SoarMatch
     public static final String USER_STRING = "***USER***";
 
     // For RL runs, how many bins should be made.
-    public static final int RL_BINS = 100;
+    public static int RL_BINS = 100;
 
     public static boolean debuggingEnabled = true;
     private static File debugFile;
@@ -267,11 +267,31 @@ public class SoarMatch
         int numTestingGames = -1;
 
         SoarMatchConfig matchConfig = new SoarMatchConfig();
-
+        
+        if (parsedArgs.containsKey("rl-bins")) {
+            try {
+                int rlBins = Integer.parseInt(parsedArgs.get("rl-bins"));
+                RL_BINS = rlBins;
+                debug("Setting number of rl bins from command line args: " + rlBins);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        
         if (parsedArgs.containsKey("optimized-kernel") && parsedArgs.get("optimized-kernel").equals("on"))
         {
             System.out.println("Using optimized kernel");
             matchConfig.optimizedKernel = true;
+        }
+        
+        if (parsedArgs.containsKey("temperature")) {
+            try {
+                double temperature = Double.parseDouble(parsedArgs.get("temperature"));
+                matchConfig.temperature = temperature;
+                debug("Setting temperature based on args to: " + temperature);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
 
         RunType runType = null;
@@ -997,7 +1017,7 @@ public class SoarMatch
             Agent agent = agents[i];
             if (config[i] != null)
             {
-                sourceAgent(agents[i], config, i, firstGames, learningOn, apoptosis, silence);
+                sourceAgent(agents[i], config, i, firstGames, learningOn, apoptosis, silence, matchConfig);
                 if (watchBT)
                 {
                     // agents[i].ExecuteCommandLine("watch 5");
@@ -1264,12 +1284,10 @@ public class SoarMatch
                         gameInProgress = false;
                     }
                     /*
-                    else if (agentHalted)
-                    {
-                        System.out.println("Player " + playerId + " halted but the game is still in progress.");
-                        System.exit(1);
-                    }
-                    */
+                     * else if (agentHalted) { System.out.println("Player " +
+                     * playerId + " halted but the game is still in progress.");
+                     * System.exit(1); }
+                     */
                 }
             }
 
@@ -1419,7 +1437,7 @@ public class SoarMatch
     }
 
     private static void sourceAgent(Agent agent, FreeDiceAgentConfiguration[] config, int i, boolean firstGames, boolean learningOn, Double apoptosis,
-            boolean silence) throws IOException
+            boolean silence, SoarMatchConfig matchConfig) throws IOException
     {
         boolean loadedRete = false;
         executeCommand(agent, "rl --set learning on");
@@ -1505,6 +1523,12 @@ public class SoarMatch
                     }
                 }
             }
+        }
+        
+        // If a temperature has been set from the command-line args,
+        // use that to override any other temperature.
+        if (matchConfig.temperature >= 0.0) {
+            executeCommand(agent, "indifferent-selection -t " + matchConfig.temperature);
         }
 
         // Finally, disable chunking if this is a testing run.
@@ -1680,7 +1704,7 @@ public class SoarMatch
         String output = agent.ExecuteCommandLine(command);
 
         if (debug) debug("Output: " + output);
-        
+
         if (agent.HadError())
         {
             debug("Error with command: " + agent.GetLastErrorDescription());
