@@ -15,6 +15,7 @@ sp {apply*initialize-dice
         ^current-id -1
         ^alternative-dice-counts <edc>
         ^dice-data-initialized true
+        ^heuristics-chunked true
         ^name dice
         #^model-enabled false
         ^dice-data <dd>)

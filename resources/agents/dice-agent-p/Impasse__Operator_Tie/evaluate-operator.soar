@@ -1,4 +1,24 @@
-## Propose evaluate based on no model
+
+## No model - propose evaluation for all of the operators that don't have a numeric preference.
+sp {selection*propose*evaluate-operator
+   :default
+   (state <s> ^name selection
+              ^superstate.model-enabled false
+             #^item <item>)
+             ^non-numeric <item>)
+  -{(state <s> ^evaluation <e>)
+    (<e> ^superoperator <item>
+         ^value true)}
+-->
+   (<s> ^operator <o> +)
+   (<o> ^name evaluate-operator
+        ^superoperator <item>
+        ^use-model false)}
+
+## Propose evaluate for model condition before the model has been computed - try to see if they are certain
+# For push bids, only evaluate with model because we are trying to see if there is a certain win or loss even without the model at this point.
+# Do not evaluate exacts without model because there is never a certain exact 
+
 sp {selection*propose*evaluate-operator*model-enabled*no-model
    :default
    (state <s> ^name selection
@@ -16,31 +36,35 @@ sp {selection*propose*evaluate-operator*model-enabled*no-model
         ^superoperator <item>
         ^use-model false)}
 
+## evaluate using model for all bids (including pushes) 
+
 sp {selection*propose*evaluate-operator*model-enabled*use-model
    :default
    (state <s> ^name selection
               ^alternative-dice-counts.updated true
               ^superstate.model-enabled true
-            #  ^item <item>)
-                ^non-numeric <item>)
+             #^item <item>)
+              ^non-numeric <item>)
   -{(state <s> ^evaluation <e>)
     (<e> ^superoperator <item>
          ^use-model true
          ^value true)}
-   (<item> ^name << bid exact challenge >>)  #remove challenge - don't retry
+   (<item> ^name << bid exact challenge >>)  
 -->
    (<s> ^operator <o> +)
    (<o> ^name evaluate-operator
         ^superoperator <item>
         ^use-model true)}
 
+## evaluations if model failed for pushes because they would not have been evaluated before model results produced. 
+
 sp {selection*propose*evaluate-operator*model-enabled*no-model*failure
    :default
    (state <s> ^name selection
               ^alternative-dice-counts failure
               ^superstate.model-enabled true
-             #^item <item>)
-                 ^non-numeric <item>)
+            #^item <item>)
+            ^non-numeric <item>)
   -{(state <s> ^evaluation <e>)
     (<e> ^superoperator <item>
          ^value true)}
@@ -52,28 +76,12 @@ sp {selection*propose*evaluate-operator*model-enabled*no-model*failure
         ^superoperator <item>
         ^use-model false)}
 
-## Seems like the next rule is sufficient
-#sp {selection*propose*evaluate-operator*model-enabled*no-model*failure*exact
-#   :default
-##   (state <s> ^name selection
-#             ^alternative-dice-counts failure
-#              ^superstate.model-enabled true
-#              ^non-numeric <item>)
-#  -{(state <s> ^evaluation <e>)
-#    (<e> ^superoperator <item>
-#         ^value true)}
-#   (<item> ^name exact)
-#-->
-#   (<s> ^operator <o> +)
-#   (<o> ^name evaluate-operator
-#        ^superoperator <item>
-#        ^use-model false)}
-
-sp {selection*propose*evaluate-operator*model-enabled*use-model*no-valid-prior-bid
+## evaluations if model failed for exacts because they would not have been evaluated before model results produced. 
+sp {selection*propose*evaluate-operator*exact*model-enabled*use-model*no-valid-prior-bid
    :default
    (state <s> ^name selection
               ^alternative-dice-counts failure
-              # ^item <item>)
+              #^item <item>)
                ^non-numeric <item>)
   -{(state <s> ^evaluation <e>)
     (<e> ^superoperator <item>
@@ -85,20 +93,6 @@ sp {selection*propose*evaluate-operator*model-enabled*use-model*no-valid-prior-b
         ^superoperator <item>
         ^use-model false)}
 
-sp {selection*propose*evaluate-operator
-   :default
-   (state <s> ^name selection
-              ^superstate.model-enabled false
-            # ^item <item>)
-                 ^non-numeric <item>)
-  -{(state <s> ^evaluation <e>)
-    (<e> ^superoperator <item>
-         ^value true)}
--->
-   (<s> ^operator <o> +)
-   (<o> ^name evaluate-operator
-        ^superoperator <item>
-        ^use-model false)}
 
 ######### Evaluation Creation
 ### Create evaluation once the eval operator is selected.

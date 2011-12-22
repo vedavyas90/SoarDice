@@ -39,7 +39,7 @@ sp {propose*bid*last-bid-not-one-next-bid-not-one*push*face*not-one
    (<last-bid> ^face <face>
                ^count <multiplier>)
    (<cup> ^count > 1
-          ^<new-face> > 0
+          ^<new-face> { <push-dice-number> > 0 }
          -^1 > 0)
 -->
    #Also propose bid that pushes 1's and face being bid
@@ -48,6 +48,7 @@ sp {propose*bid*last-bid-not-one-next-bid-not-one*push*face*not-one
          ^face <new-face>
          ^push-face-count 1
          ^push-face <new-face>
+         ^push-dice-number <push-dice-number>
          ^multiplier (+ <inc> <multiplier>))
 #   (write (crlf) |-Propose bid with push. Bid: | (+ <inc> <multiplier>) | | <new-face> |'s. Push: | <new-face>)
 #   (write (crlf) |-Last bid: | <multiplier> | | <face> |'s|)
@@ -70,8 +71,8 @@ sp {propose*bid*last-bid-not-one-next-bid-not-one*push*face*one
    (<last-bid> ^face <face>
                ^count <multiplier>)
    (<cup> ^count > 2
-          ^<new-face> > 0
-          ^1 > 0)
+          ^<new-face> { <face-dice> > 0 }
+          ^1 { <one-dice> > 0 })
 -->
    #Also propose bid that pushes 1's and face being bid
    (<s> ^operator <o2>)
@@ -80,6 +81,7 @@ sp {propose*bid*last-bid-not-one-next-bid-not-one*push*face*one
          ^push-face-count 2
          ^push-face <new-face>
          ^push-face 1
+         ^push-dice-number (+ <one-dice> <face-dice>)
          ^multiplier (+ <inc> <multiplier>))
 #   (write (crlf) |-Propose bid with push. Bid: | (+ <inc> <multiplier>) | | <new-face> |'s. Push: | <new-face> | & 1|)
 #   (write (crlf) |-Last bid: | <multiplier> | | <face> |'s|)
@@ -104,7 +106,7 @@ sp {propose*bid*last-bid-not-one-next-bid-not-one*push*one
                ^count <multiplier>)
    (<cup> ^count > 1
          -^<new-face> > 0
-          ^1 > 0)
+          ^1 { <push-dice-number> > 0 })
 -->
    #Also propose bid that pushes 1's and face being bid
    (<s> ^operator <o2>)
@@ -112,6 +114,7 @@ sp {propose*bid*last-bid-not-one-next-bid-not-one*push*one
          ^face <new-face>
          ^push-face-count 1
          ^push-face 1
+         ^push-dice-number <push-dice-number>
          ^multiplier (+ <inc> <multiplier>))
 #   (write (crlf) |-Propose bid with push. Bid: | (+ <inc> <multiplier>) | | <new-face> |'s. Push: | <new-face> | & 1|)
 #   (write (crlf) |-Last bid: | <multiplier> | | <face> |'s|)
@@ -146,19 +149,20 @@ sp {propose*bid*last-bid-one-next-bid-one*push*1
         -^state.last-bid nil
          ^state.special false
          ^players.me.cup <cup>)
-   (<cup> ^1 > 0
+   (<cup> ^1 { <push-dice-number> > 0 }
           ^count > 1)
    (<a> ^name bid
         ^available true)
    (<last-bid> ^face 1
                ^count <multiplier>)
 -->
-   #Also propose bid that pushes 1's
+#Also propose bid that pushes 1s
    (<s> ^operator <o2>)
    (<o2> ^name bid
          ^face 1
          ^push-face-count 1
-         ^push-face 1
+         ^push-face 1         
+         ^push-dice-number <push-dice-number>
          ^multiplier (+ 1 <multiplier>))
 }
 
@@ -190,7 +194,7 @@ sp {propose*bid*last-bid-not-one-next-bid-one*push*1
          ^affordances.action <a>
          ^players.me.cup <cup>)
    (<cup> ^count > 1
-          ^1 > 0)
+          ^1 { <push-dice-number> > 0 })
    (<a> ^name bid
         ^available true)
    (<last-bid> ^face <> 1
@@ -200,7 +204,8 @@ sp {propose*bid*last-bid-not-one-next-bid-one*push*1
    (<o2> ^name bid
          ^face 1
          ^push-face-count 1
-         ^push-face 1
+         ^push-face 1         
+         ^push-dice-number <push-dice-number>
          ^multiplier (div (+ 1 <multiplier>) 2))
 }
 
@@ -249,8 +254,8 @@ sp {propose*bid*last-bid-one-next-bid-not-one*push2
          ^affordances.action <a>
          ^players.me.cup <cup>)
    (<cup> ^count > 2
-          ^<new-face> > 0
-          ^1 > 0)
+          ^<new-face> { <face-dice> > 0 }
+          ^1 { <one-dice> > 0 })
    (<a> ^name bid
         ^available true)
 -->
@@ -260,6 +265,7 @@ sp {propose*bid*last-bid-one-next-bid-not-one*push2
          ^push-face <new-face>
          ^push-face 1
          ^face <new-face>
+         ^push-dice-number (+ <one-dice> <face-dice>)
          ^multiplier (+ <inc> <multiplier>))
 }
 
@@ -277,7 +283,7 @@ sp {propose*bid*last-bid-one-next-bid-not-one*push*face
          ^affordances.action <a>
          ^players.me.cup <cup>)
    (<cup> ^count > 1
-          ^<new-face> > 0
+          ^<new-face> { <push-dice-number> > 0 }
          -^1 > 0)
    (<a> ^name bid
         ^available true)
@@ -287,6 +293,7 @@ sp {propose*bid*last-bid-one-next-bid-not-one*push*face
          ^push-face-count 1
          ^push-face <new-face>
          ^face <new-face>
+         ^push-dice-number <push-dice-number>
          ^multiplier (+ <inc> <multiplier>))
 }
 
@@ -305,7 +312,7 @@ sp {propose*bid*last-bid-one-next-bid-not-one*push1
          ^players.me.cup <cup>)
    (<cup> ^count > 1
          -^<new-face> > 0
-          ^1 > 0)
+          ^1 { <push-dice-number> > 0 })
    (<a> ^name bid
         ^available true)
 -->
@@ -314,11 +321,24 @@ sp {propose*bid*last-bid-one-next-bid-not-one*push1
          ^push-face-count 1
          ^push-face 1
          ^face <new-face>
+         ^push-dice-number <push-dice-number>
          ^multiplier (+ <inc> <multiplier>))
 }
 
+#### Reject push bid if push-dice-number is equal to the number of dice under cup
+## don't push when reroll good die.
+
+sp {evaluate*bid*reject-full-push
+   (state <s> ^operator <op> +
+              ^io.input-link.players.me.cup.count <count>)
+   (<op> ^name bid
+         ^push-dice-number <count>)
+-->
+   (<s> ^operator <op> -)}
+
 ##################################
 sp {apply*bid
+  # :interrupt
    (state <s> ^operator <op>
               ^io.output-link <ol>)
    (<op> ^name bid
@@ -333,6 +353,7 @@ sp {apply*bid
 }
 
 sp {apply*bid*push
+ #  :interrupt
    (state <s> ^operator <op>)
    (<s> ^io.input-link.players.me.cup.die <die>)
    (<die> ^face <face>)

@@ -1,4 +1,4 @@
-94
+96
 SOAR_ID 137
 ENUMERATION 136 1 compute-challenge-pass-likelihood
 SOAR_ID 139
@@ -43,7 +43,9 @@ SOAR_ID 305
 INT_RANGE 171 -2147483648 2147483647
 STRING 304
 INT_RANGE 170 -2147483648 2147483647
+INT_RANGE 307 0 0
 STRING 306
+INT_RANGE 308 0 0
 SOAR_ID 161
 INT_RANGE 160 -2147483648 2147483647
 FLOAT_RANGE 186 -Infinity Infinity
@@ -93,97 +95,99 @@ ENUMERATION 126 1 query-smem
 ENUMERATION 125 1 evaluate-operator
 ENUMERATION 124 1 state
 SOAR_ID 123
-93
-303 name 304
-123 dice-counts 238
-216 name 217
-161 unknown 224
-153 hold-face 292
-238 dice-counted 116
-123 operator 218
-123 operator 212
-123 smem 155
-156 query 157
-147 name 146
-123 name 125
-153 face 111
-123 operator 133
-123 operator 145
-299 face 301
-123 top-state 294
-153 not-face 278
-18 2 237
-127 name 126
-153 face 117
-18 count 20
-137 name 136
-19 die 24
-299 name 300
-123 bid-difference-next 296
-123 total-known 185
-143 name 142
-129 name 128
-123 total-possible 186
-123 operator 137
-24 face 25
-180 unknown 182
-299 target 305
-299 multiplier 302
-14 pushed 19
-123 superstate 293
-157 unknown 158
-14 alternative-dice-counts 161
-238 dice-count 153
+95
 127 target 14
-18 1 236
-157 number-needed 159
-123 estimated-total 131
-214 superoperator 299
-123 operator 216
-214 name 213
-14 name 16
-123 next-unknowns 297
-14 dice-counts 161
-123 bid-difference 187
-238 updated 277
-18 die 22
 127 type 154
-141 name 140
-129 multiplier 171
-14 me 152
-123 operator 147
-123 operator 235
-14 id 15
-157 base 160
-123 operator 214
-139 type 298
-235 name 234
-180 name 179
-129 target 14
-123 operator 180
-305 name 306
+303 name 304
 123 operator 141
+18 die 22
+156 query 157
+212 name 211
+123 dice-counts 238
+14 dice-counts 161
+153 count 112
+123 operator 137
+157 number-needed 159
+147 name 146
+14 pushed 19
+14 alternative-dice-counts 161
+123 operator 127
+123 operator 145
+180 name 179
+123 superstate 293
+18 1 236
+129 multiplier 171
+214 name 213
+161 1 225
+155 command 156
+299 push-dice-number 308
+139 type 298
+129 name 128
+19 die 24
+153 hold-face 292
+133 name 132
+123 name 125
+123 total-possible 186
 161 4 228
+214 superoperator 299
+238 total-dice-count 130
+299 face 301
+123 operator 147
+123 total-known 185
+299 multiplier 302
+14 exists 17
+129 face 170
+18 2 237
+123 operator 216
+143 name 142
+123 bid-difference-next 296
+145 name 144
+305 name 306
+161 unknown 224
+161 3 227
+238 updated 277
+123 operator 214
+18 count 20
+123 operator 139
+123 operator 235
+14 me 152
+123 operator 218
+123 smem 155
+123 operator 180
 161 5 229
 123 operator 129
-161 3 227
-139 name 138
-161 2 226
-212 name 211
-238 total-dice-count 130
-14 exists 17
+137 name 136
+123 operator 133
 123 operator 143
-129 face 170
-155 command 156
-22 face 23
-14 total-dice 191
-153 count 112
-133 name 132
-145 name 144
-123 type 124
-218 name 219
-123 operator 127
-19 count 21
-161 1 225
+123 bid-difference 187
+139 name 138
+216 name 217
+123 estimated-total 131
 14 cup 18
-123 operator 139
+218 name 219
+238 dice-count 153
+153 not-face 278
+214 sunknown 307
+123 operator 212
+299 name 300
+180 unknown 182
+24 face 25
+22 face 23
+299 target 305
+157 base 160
+235 name 234
+19 count 21
+123 top-state 294
+123 next-unknowns 297
+14 name 16
+123 type 124
+14 total-dice 191
+238 dice-counted 116
+153 face 117
+153 face 111
+127 name 126
+161 2 226
+141 name 140
+129 target 14
+157 unknown 158
+14 id 15

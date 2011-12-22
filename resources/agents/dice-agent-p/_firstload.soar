@@ -5,8 +5,10 @@ multi-attributes die 4
 multi-attributes next-bid 25
 multi-attributes action 10
 multi-attributes evaluation 10
+
 gp-max 10000000
-max-chunks 200
+max-chunks 50000
+
 ## Boltzman with low temperature
 indifferent-selection -b
 indifferent-selection -t .08
@@ -14,6 +16,8 @@ indifferent-selection -t .08
 pushd ../../default
 source selection.soar
 popd
+
+rl --set hrl-discount off
 
 ## Not using look ahead search
 excise evaluate-operator*propose*look-ahead

@@ -7,13 +7,12 @@ sp {evaluate-operator*propose*compute-challenge-probability
         ^superoperator <so>)
    (<so> ^name challenge
          ^target <t>)
--->
+-->   
    (<op> ^name compute-challenge-probability
          ^target <t>)
 }
 
 ## If there was an intervening PASS consider challenging previous bid
-
 sp {evaluate-operator*propose*compute-challenge-probability*intervening-pass
    (state <s> ^name evaluate-operator
               ^top-state.io.input-link <input>

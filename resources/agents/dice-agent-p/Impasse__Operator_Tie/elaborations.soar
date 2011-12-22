@@ -6,53 +6,7 @@ sp {selection*force-learn
 -->
    (force-learn <s>)}
 
-sp {apply*compute-bid*invoke-qna-query*split-false
-   (state <s> ^top-state.split false
-              ^evaluation <eval>)
-   (<eval> ^compute-probability <cp>)
-   (<cp> ^count <count> 
-         ^number-of-dice <dice>
-         ^number-of-faces <faces>
-         ^predicate <pred>)   
--->
-   (<eval> ^probability (compute-dice-probability <dice> <faces> <count> <pred>))   
-}
-
-sp {apply*compute-bid*compute-probability*split-true
-   (state <s> ^top-state.split true
-              ^evaluation <eval>)
-   (<eval> ^compute-probability <cp>
-           ^superoperator <so>)
-   (<cp> ^count <count> 
-         ^number-of-dice <dice>
-         ^number-of-faces <faces>
-         ^predicate <pred>)
--->
-   (write (crlf) |1.Copy args to superoperator: | <so>)
-   (<so> ^count <count> 
-         ^number-of-dice <dice>
-         ^number-of-faces <faces>
-         ^predicate <pred>)
-}
-
-sp {apply*compute-bid*invoke-rhs-probability
-   (state <s> #^quiescence t
-              ^top-state.split true
-             #^top-state.next-player-data.face <face>  - next-player-data nil
-             #^io.input-link.state.last-bid.face <face> - bid (not push)
-             #^io.input-link.history.action push 
-             #^top-state.last-bid -bid (not push)
-              ^evaluation <eval>)
-   (<eval> ^superoperator <so>)
-   (<so> # ^name  { <> bid <name> }  # include whether there is a push
-         ^count <count> 
-          ^number-of-dice <dice>
-          ^number-of-faces <faces>
-          ^predicate <pred>)
--->
-  (write (crlf) |2.Compute probability back up: | <eval> |: | (compute-dice-probability <dice> <faces> <count> <pred>))
-   (<eval> ^probability (compute-dice-probability <dice> <faces> <count> <pred>))   
-}
+#### Ordering of operator selections
 
 sp {selection*prefer*worst*pass
    (state <s> ^name selection
@@ -82,9 +36,21 @@ sp {selection*compare*create-preferences
    (<s> ^operator <op1> < <op2>)
 }
 
-## Convert evaluations to preferences in superstate
-#####
+#### Computing probability using RHS function
 
+sp {apply*compute-bid*invoke-qna-query*split-false
+   (state <s> ^top-state.split false
+              ^evaluation <eval>)
+   (<eval> ^compute-probability <cp>)
+   (<cp> ^count <count> 
+         ^number-of-dice <dice>
+         ^number-of-faces <faces>
+         ^predicate <pred>)   
+-->
+   (<eval> ^probability (compute-dice-probability <dice> <faces> <count> <pred>))   
+}
+
+## Convert evaluations to preferences in superstate
 
 sp {selection*convert*probability*numeric-value
    (state <s> ^name selection
@@ -96,4 +62,44 @@ sp {selection*convert*probability*numeric-value
          ^desired <d>)
 -->
    (<e1> ^numeric-value <nv>)}
+
+########SPLIT
+
+sp {apply*compute-bid*compute-probability*split-true
+   (state <s> ^top-state.split true
+              ^evaluation <eval>)
+   (<eval> ^compute-probability <cp>
+           ^superoperator <so>)
+   (<cp> ^count <count> 
+         ^number-of-dice <dice>
+         ^number-of-faces <faces>
+         ^predicate <pred>)
+-->
+   (write (crlf) |1.Copy args to superoperator: | <so>)
+   (<so> ^count <count> 
+         ^number-of-dice <dice>
+         ^number-of-faces <faces>
+         ^predicate <pred>)
+}
+
+sp {apply*compute-bid*invoke-rhs-probability
+   (state <s> ^top-state.split true
+             #^top-state.next-player-data.face <face>  - next-player-data nil
+             #^io.input-link.state.last-bid.face <face> - bid (not push)
+             #^io.input-link.history.action push 
+             #^top-state.last-bid -bid (not push)
+              ^evaluation <eval>)
+   (<eval> ^superoperator <so>)
+   (<so> # ^name  { <> bid <name> }  # include whether there is a push
+         ^count <count> 
+          ^number-of-dice <dice>
+          ^number-of-faces <faces>
+          ^predicate <pred>)
+-->
+  (write (crlf) |2.Compute probability back up: | <eval> |: | (compute-dice-probability <dice> <faces> <count> <pred>))
+   (<eval> ^probability (compute-dice-probability <dice> <faces> <count> <pred>))   
+}
+
+
+
 

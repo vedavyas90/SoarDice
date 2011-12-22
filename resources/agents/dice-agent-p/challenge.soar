@@ -1,4 +1,4 @@
-sp {dice*propose*challenge
+sp {dice*propose*challenge*pass
    (state <s> ^name dice
               ^my-turn true
               ^last-bid <last-bid>
