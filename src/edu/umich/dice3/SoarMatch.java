@@ -529,18 +529,22 @@ public class SoarMatch
                         String nowTime = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(Calendar.getInstance().getTime());
 
                         // Create a string to represent the baseline's wins
-                        StringBuilder sb = new StringBuilder();
+                        StringBuilder winsSb = new StringBuilder();
+                        StringBuilder namesSb = new StringBuilder();
                         for (int i = 1; i < wins.length; ++i)
                         {
-                            sb.append(wins[i]);
+                            winsSb.append(wins[i]);
+                            namesSb.append(agentNames.get(i));
                             if (i + 1 < wins.length)
                             {
-                                sb.append(",");
+                                winsSb.append(",");
+                                namesSb.append(",");
                             }
                         }
-                        String baselineWins = sb.toString();
+                        String baselineWins = winsSb.toString();
+                        String baselineNames = namesSb.toString();
 
-                        URL url = new URL(server + "/insert/" + process + "/" + agentNames.get(0) + "/" + agentNames.get(1) + "/" + beginTime + "/"
+                        URL url = new URL(server + "/insert/" + process + "/" + agentNames.get(0) + "/" + baselineNames + "/" + beginTime + "/"
                                 + (bin * numGames) + "/" + numTestingGames + "/" + wins[0] + "/" + baselineWins + "/" + nowTime + "/" + rd.rlRules + "/"
                                 + rd.nonRlRules + "/" + rd.averageFiringCount() + "/" + rd.averageRl());
                         Scanner scanner = new Scanner(url.openStream());
