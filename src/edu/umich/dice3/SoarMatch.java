@@ -300,9 +300,14 @@ public class SoarMatch
         String argsLog = null;
 
         // Maybe don't cellect metadata
-        if (parsedArgs.containsKey("metadata") && parsedArgs.get("metadata") == "off")
+        if (parsedArgs.containsKey("metadata") && parsedArgs.get("metadata").equals("off"))
         {
+            debug("Setting metadata from command line args to off");
             matchConfig.collectMetadata = false;
+        }
+        else
+        {
+            debug("No metadata command line switch found; leaving it on");
         }
 
         // Get server and process number information
@@ -784,6 +789,7 @@ public class SoarMatch
     private static DiceFrame runGames(Wini wini, List<String> agentNames, File logFile, String beginTime, int numGames, SoarMatchConfig matchConfig,
             Double apoptosis, Random random, boolean silence, boolean watchBT, File maxTime) throws Exception
     {
+        debug("Running games, matchConfig: " + matchConfig);
 
         // Unpack config variables.
         boolean spawnDebugger = matchConfig.spawnDebugger;
@@ -915,7 +921,12 @@ public class SoarMatch
 
                 if (collectMetadata)
                 {
+                    debug("Setting metadata on for agent " + i);
                     executeCommand(agents[i], "rl --set meta on");
+                }
+                else
+                {
+                    debug("Leaving metadata off for agent " + i);
                 }
 
                 if (collectMetadata)
