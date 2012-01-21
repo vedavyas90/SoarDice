@@ -14,4 +14,17 @@ public class SoarMatchConfig
     // Newer options
     public boolean optimizedKernel = false;
     public double temperature = -1.0;
+
+    @Override
+    public String toString() {
+        return "SoarMatchConfig, "
+            + "spawnDebugger: " + spawnDebugger + ", "
+            + "useGui: " + useGui + ", "
+            + "learningOn: " + learningOn + ", "
+            + "firstGames: " + firstGames + ", "
+            + "writeOverride: " + writeOverride + ", "
+            + "collectMetadata: " + collectMetadata + ", "
+            + "optimizedKernel: " + optimizedKernel + ", "
+            + "temperature: " + temperature + ".";
+    }
 }
