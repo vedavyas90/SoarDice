@@ -16,15 +16,16 @@ public class SoarMatchConfig
     public double temperature = -1.0;
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SoarMatchConfig, "
-            + "spawnDebugger: " + spawnDebugger + ", "
-            + "useGui: " + useGui + ", "
-            + "learningOn: " + learningOn + ", "
-            + "firstGames: " + firstGames + ", "
-            + "writeOverride: " + writeOverride + ", "
-            + "collectMetadata: " + collectMetadata + ", "
-            + "optimizedKernel: " + optimizedKernel + ", "
-            + "temperature: " + temperature + ".";
-    }
+                + "spawnDebugger: " + spawnDebugger + ", "
+                + "useGui: " + useGui + ", "
+                + "learningOn: " + learningOn + ", "
+                + "firstGames: " + firstGames + ", "
+                + "writeOverride: " + writeOverride + ", "
+                + "collectMetadata: " + collectMetadata + ", "
+                + "optimizedKernel: " + optimizedKernel + ", "
+                + "temperature: " + temperature + ".";
+        }
 }
