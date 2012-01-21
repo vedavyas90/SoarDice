@@ -6,6 +6,14 @@ sp {propose*initialize-dice
    (<o> ^name initialize-dice)
 }
 
+sp {initialize-dice*default-heuristics-chunked
+   (state <s> ^superstate nil
+              ^name dice
+             -^heuristics-chunked false)
+-->
+   (<s> ^heuristics-chunked true)
+   (write |Setting heuristics-chunked to true|)
+}
 
 sp {apply*initialize-dice
    (state <s> ^operator <op>)
@@ -15,10 +23,11 @@ sp {apply*initialize-dice
         ^current-id -1
         ^alternative-dice-counts <edc>
         ^dice-data-initialized true
-        ^heuristics-chunked true
+        #^heuristics-chunked true
         ^name dice
         #^model-enabled false
         ^dice-data <dd>)
+   (write |Setting name to dice|)
    (<dd> ^next-bid <nb22> <nb23> <nb24> <nb25> <nb26>
                    <nb32> <nb33> <nb34> <nb35> <nb36>
                    <nb42> <nb43> <nb44> <nb45> <nb46>
