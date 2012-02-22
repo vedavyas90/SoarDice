@@ -10,6 +10,8 @@ public class SoarMatchConfig
     public boolean firstGames;
     public String writeOverride;
     public boolean collectMetadata;
+    public double metaLearningRate = -1.0;
+    public String decayMode = null;
     
     // Newer options
     public boolean optimizedKernel = false;
@@ -26,6 +28,8 @@ public class SoarMatchConfig
                 + "writeOverride: " + writeOverride + ", "
                 + "collectMetadata: " + collectMetadata + ", "
                 + "optimizedKernel: " + optimizedKernel + ", "
-                + "temperature: " + temperature + ".";
+                + "temperature: " + temperature + "."
+                + "metaLearningRate: " + metaLearningRate + "."
+                + "decayMode: " + decayMode + ".";
         }
 }

@@ -293,6 +293,16 @@ public class SoarMatch
                 e.printStackTrace();
             }
         }
+        
+        if (parsedArgs.containsKey("meta-learning-rate")) {
+            try {
+                double metaLearningRate = Double.parseDouble(parsedArgs.get("meta-learning-rate"));
+                matchConfig.metaLearningRate = metaLearningRate;
+                debug("Setting meta-learning-rate based on args to: " + metaLearningRate);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
 
         RunType runType = null;
         matchConfig.useGui = true;
@@ -407,6 +417,10 @@ public class SoarMatch
                 System.exit(1);
             }
         }
+        
+        if (parsedArgs.containsKey("decay-mode")) {
+            matchConfig.decayMode = parsedArgs.get("decay-mode");
+        }
 
         /* Apoptosis stuff */
 
@@ -427,14 +441,22 @@ public class SoarMatch
         if (parsedArgs.containsKey("rng-seed"))
         {
             rngSeed = Integer.parseInt(parsedArgs.get("rng-seed"));
+            debug("Setting random seed from command line args to " + rngSeed);
         }
         Random random;
-        if (rngSeed == null) random = new Random();
-        else random = new Random(rngSeed);
+        if (rngSeed == null) 
+        {
+            random = new Random();
+        }
+        else
+        {
+            random = new Random(rngSeed);
+        }
 
         boolean optimizedKernel = parsedArgs.containsKey("kernel") && parsedArgs.get("kernel").equals("optimized");
         boolean silence = parsedArgs.containsKey("silence") && parsedArgs.get("silence").equals("on");
-        setDebuggingEnabled(!silence);
+        //setDebuggingEnabled(!silence);
+        setDebuggingEnabled(true);
 
         boolean maxTime = parsedArgs.containsKey("maxtime") && parsedArgs.get("maxtime").equals("on");
 
@@ -926,10 +948,6 @@ public class SoarMatch
                     debug("Setting metadata on for agent " + i);
                     executeCommand(agents[i], "rl --set meta on");
                     debug("Setting metadata on for agent " + i);
-                }
-                else
-                {
-                    debug("Leaving metadata off for agent " + i);
                 }
                 else
                 {
@@ -1511,6 +1529,9 @@ public class SoarMatch
         {
             executeCommand(agent, "learn --only");
             executeCommand(agent, "watch --rl");
+            
+            // For debugging chunking
+            // executeCommand(agent, "watch --learning print");
 
             // Create the rl file if it doesn't exist.
             File rlFile = new File(config[i].writeFile);
@@ -1551,6 +1572,10 @@ public class SoarMatch
         // use that to override any other temperature.
         if (matchConfig.temperature >= 0.0) {
             executeCommand(agent, "indifferent-selection -t " + matchConfig.temperature);
+        }
+        
+        if (matchConfig.metaLearningRate >= 0.0) {
+            executeCommand(agent, "rl --set meta-learning-rate " + matchConfig.metaLearningRate);
         }
 
         // Finally, disable chunking if this is a testing run.
@@ -1674,7 +1699,7 @@ public class SoarMatch
                 executeCommand(agents[i], "rete-net -s " + retePath);
 
                 // Also write rete-path for this particular time.
-                executeCommand(agents[i], "rete-net -s " + retePathWithTime);
+                // executeCommand(agents[i], "rete-net -s " + retePathWithTime);
 
                 if (agents[i].HadError())
                 {
