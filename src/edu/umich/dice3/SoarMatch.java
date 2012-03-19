@@ -1433,7 +1433,7 @@ public class SoarMatch
                 // false).split("\n");
 
                 sb.append("Rule metadata for agent #" + i + ":\n\n");
-                sb.append("Rule Name,Update Count,RL Value,Total signed update,Total unsigned update,\n");
+                sb.append("Rule Name,Update Count,Delta Bar Delta Beta,Delta Bar Delta H,RL Value,Total signed update,Total unsigned update,\n");
                 for (String ruleName : rlRulesFired.get(i))
                 {
                     debug("Writing metadata for RL rule: " + ruleName);
@@ -1446,6 +1446,8 @@ public class SoarMatch
                     sb.append(ruleName + ",");
                     sb.append(shortRuleTokens[1] + ",");
                     sb.append(shortRuleTokens[2] + ",");
+                    sb.append(shortRuleTokens[3] + ",");
+                    sb.append(shortRuleTokens[4] + ",");
                     Double signedUpdate = signedSums.get(ruleName);
                     if (signedUpdate != null)
                     {
