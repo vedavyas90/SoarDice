@@ -4,3 +4,4 @@ experiments
 .settings
 .project
 SoarMatch.launch
+.DS_Store
