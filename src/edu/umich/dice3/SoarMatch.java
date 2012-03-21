@@ -478,7 +478,7 @@ public class SoarMatch
                 matchConfig.spawnDebugger = true;
                 matchConfig.firstGames = true;
                 matchConfig.learningOn = true;
-                runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null);
+                runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null, "single");
             }
             else if (runType == RunType.RL)
             {
@@ -514,7 +514,7 @@ public class SoarMatch
                     matchConfig.spawnDebugger = true;
                     matchConfig.firstGames = bin == 0;
                     matchConfig.learningOn = false;
-                    DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig, apoptosis, random, silence, false, times);
+                    DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig, apoptosis, random, silence, false, times, "bin_" + bin + "_learning_off");
                     int[] wins = frame.getWins();
                     RulesData[] rulesData = frame.getRulesData();
                     FileWriter fw = new FileWriter(allLog, true);
@@ -595,7 +595,7 @@ public class SoarMatch
                     matchConfig.spawnDebugger = true;
                     matchConfig.firstGames = bin == 0;
                     matchConfig.learningOn = true;
-                    frame = runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, bin == 1, times);
+                    frame = runGames(wini, agentNames, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, bin == 1, times, "bin_" + bin + "_learning_on");
                     wins = frame.getWins();
                     rulesData = frame.getRulesData();
                     fw = new FileWriter(allLog, true);
@@ -636,12 +636,12 @@ public class SoarMatch
                 File times = null;
                 if (maxTime)
                 {
-                    times = new File(logDir, "time_" + RL_BINS + "_learning_on.txt");
+                    times = new File(logDir, "time_" + RL_BINS + "_learning_off.txt");
                 }
                 matchConfig.spawnDebugger = true;
                 matchConfig.firstGames = false;
                 matchConfig.learningOn = false;
-                DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig, apoptosis, random, silence, false, times);
+                DiceFrame frame = runGames(wini, agentNames, logFile, beginTime, numTestingGames, matchConfig, apoptosis, random, silence, false, times, "bin_" + RL_BINS + "_learning_off");
                 int[] wins = frame.getWins();
                 FileWriter fw = new FileWriter(allLog, true);
                 fw.write("Bin " + RL_BINS + ", learning off:\n");
@@ -681,7 +681,7 @@ public class SoarMatch
                     matchConfig.spawnDebugger = false;
                     matchConfig.learningOn = true;
                     matchConfig.firstGames = true;
-                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null);
+                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null, "first_vs_each");
                     int[] wins = frame.getWins();
                     FileWriter fw = new FileWriter(allLog, true);
                     fw.write(pair.get(0) + '\t' + wins[0] + '\t' + pair.get(1) + '\t' + wins[1] + '\n');
@@ -709,7 +709,7 @@ public class SoarMatch
                     matchConfig.spawnDebugger = true;
                     matchConfig.learningOn = true;
                     matchConfig.firstGames = true;
-                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null);
+                    DiceFrame frame = runGames(wini, pair, logFile, beginTime, numGames, matchConfig, apoptosis, random, silence, false, null, "all_permutations");
                     int[] wins = frame.getWins();
                     FileWriter fw = new FileWriter(allLog, true);
                     fw.write(pair.get(0) + '\t' + wins[0] + '\t' + pair.get(1) + '\t' + wins[1] + '\n');
@@ -809,7 +809,7 @@ public class SoarMatch
      * @throws Exception
      */
     private static DiceFrame runGames(Wini wini, List<String> agentNames, File logFile, String beginTime, int numGames, SoarMatchConfig matchConfig,
-            Double apoptosis, Random random, boolean silence, boolean watchBT, File maxTime) throws Exception
+            Double apoptosis, Random random, boolean silence, boolean watchBT, File maxTime, String runTag) throws Exception
     {
         debug("Running games, matchConfig: " + matchConfig);
 
@@ -954,6 +954,7 @@ public class SoarMatch
                     debug("Leaving metadata off for agent " + i);
                 }
 
+                /*
                 if (collectMetadata)
                 {
                     agents[i].RegisterForProductionEvent(smlProductionEventId.smlEVENT_AFTER_PRODUCTION_FIRED, new ProductionEventInterface()
@@ -970,9 +971,17 @@ public class SoarMatch
                         }
                     }, null);
                 }
+                */
 
                 if (collectMetadata)
                 {
+                    // Trying to do this in the kernel now
+                    String rlUpdateLogPath = config[i].getEscapedRlUpdateLogPathWithAppending("-" + runTag);
+                    if (rlUpdateLogPath != null) {
+                        System.out.println("Setting rl update log path: \"" + rlUpdateLogPath + "\"");
+                        executeCommand(agents[i], "rl --set update-log-path \"" + rlUpdateLogPath + "\"");
+                    }
+                    /*
                     agents[i].RegisterForPrintEvent(smlPrintEventId.smlEVENT_PRINT, new PrintEventInterface()
                     {
                         @Override
@@ -1019,6 +1028,7 @@ public class SoarMatch
                             debug("Set new values for RL rule " + ruleName + ": " + oldSignedSum + ", " + oldUnsignedSum);
                         }
                     }, null);
+                    */
                 }
 
                 if (agents[i] == null)

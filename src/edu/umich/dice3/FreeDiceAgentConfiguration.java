@@ -73,4 +73,12 @@ public class FreeDiceAgentConfiguration {
     {
         return removeExtension(getEscapedWriteFile()) + append + ".soar";
     }
+    
+    public String getEscapedRlUpdateLogPathWithAppending(String append)
+    {
+        if (writeFile == null) {
+            return null;
+        }
+        return removeExtension(getEscapedWriteFile()) + "_rl-update-log_" + append + ".txt";
+    }
 }
